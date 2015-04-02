@@ -1,8 +1,13 @@
 # iRODS Rule Language CheatSheet
-A HTML cheat sheet for the [iRODS](http://irods.org) rule language.
+A HTML cheat sheet for the [iRODS](http://irods.org) rule language
+in the form of a 2 page landscape A4.
 
+## Preview
+
+### Page 1:
 ![Screenshot page 1](irodsrules.p1.png)
 
+### Page 2:
 ![Screenshot page 2](irodsrules.p2.png)
 
 ## How to use
