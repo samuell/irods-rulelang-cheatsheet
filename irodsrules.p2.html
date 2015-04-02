@@ -1,0 +1,240 @@
+<html>
+<head>
+<style>
+body, p {
+	font-size: 9pt;
+	font-family: arial, helvetica, sans-serif;
+}
+.comment {
+	color: #999;
+}
+.string {
+	color: #c06;
+}
+.number {
+	color: #00f;
+}
+.function {
+	color: #369;
+    font-weight:bold;
+}
+.operator {
+	color: #900;
+}
+.constant {
+    color: #00f;
+}
+p {
+	margin: 0 0 1em 0;
+}
+code, pre {
+	font-size: 8pt;
+}
+h1, h2, h3 {
+	margin-bottom: .25em;
+}
+h4, h5, h6 {
+	margin-bottom: 0;
+}
+td {
+	vertical-align: top;
+	padding-right: .8em;
+}
+h3 {
+	font-size: 13pt;
+}
+table {
+	width: 100%
+}
+pre {
+  margin: 0 0 1em 0;
+}
+</style>
+</head>
+<body>
+<table><tbody>
+<tr class="odd">
+<td style="vertical-align: top; width: 25%" align="left">
+	
+<h3>Defining functions</h3>
+
+<p>
+Functions can be thought of as microservices written in the rule language
+and are defined like this:
+</p>
+<p>
+<code><span class="function">&lt;name&gt;</span>(&lt;param&gt;, ..., &lt;param&gt;) <span class="operator">=</span> &lt;expr&gt;</code>
+</p>
+
+<p>
+Example:<br>
+</p>
+<p>
+<code><span class="function">square</span>(*n) <span class="operator">=</span> *n <span class="operator">*</span> *n</code>
+</p>
+
+<p>
+Variables in functions: The let expression As function definitions are based
+on expressions rather than action sequences, we cannot put an assignment
+directly inside an expression. For example, the following is not a valid
+function definition:
+</p>
+<p>
+<code><span class="function">quad</span>(*n) <span class="operator">=</span> *t <span class="operator">=</span> *n <span class="operator">*</span> *n; *t <span class="operator">*</span> *t</code>
+</p>
+
+<p>
+To solve this problem, the let expression provides scoped values in an
+expression. The general syntax for the let expression is:
+</p>
+<p>
+<code><span class="function">let</span> &lt;assignment&gt; <span class="function">in</span> &lt;expr&gt;</code>
+</p>
+
+<p>
+For example:
+</p>
+<p>
+<code><span class="function">quad</span>(*n) <span class="operator">=</span> <span class="function">let</span> *t <span class="operator">=</span> *n <span class="operator">*</span> *n <span class="function">in</span> *t <span class="operator">*</span> *t</code
+</p>
+
+<p>The variable on the left hand side of the assignment in the let expression
+is a let-bound variable. The scope of such a variable is within the let
+expression. A let bound variable should not be reassigned inside the let
+expression.</p>
+
+</td>
+<td style="vertical-align: top; width: 25%" align="left">
+	
+<h3>Defining Rules</h3>
+
+<p>Define rules with nontrivial rule conditions like this:</p>
+
+<pre>
+<span class="function">&lt;name&gt;</span>(&lt;param&gt;, ..., &lt;param&gt;) {
+ <span class="function">on</span>(&lt;condition&gt;) {
+   &lt;actions&gt;
+ }
+}
+</pre>
+
+<p>The rule condition can be skipped for rules with trivial or non-existent
+conditions:</p>
+
+<pre><span class="function">&lt;name&gt;</span>(&lt;param&gt;, ..., &lt;param&gt;) {
+&lt;actions&gt;
+}</pre>
+
+<p>A rule can have multiple conditional expressions:</p>
+
+<pre>&lt;name&gt;(&lt;param&gt;, ..., &lt;param&gt;) {
+ <span class="function">on</span>(&lt;condition&gt;) { &lt;actions&gt; } ...
+ <span class="function">on</span>(&lt;condition&gt;) { &lt;actions&gt; }
+}</pre>
+
+<h3>Generating and Capturing Errors</h3>
+
+<p>In a rule, we can also prevent the rule from failing when a microservice
+fails:</p>
+
+<p><code><span class="function">errorcode</span>(msi)</code></p>
+
+<p>The errormsg microservice captures the error message, allows further
+processing of the error message, and avoids the default logging of the error
+message, like so:</p>
+
+<p><code><span class="function">errormsg</span>(msi, *msg)</code></p>
+
+<p>In a rule, the <span class="function">fail</span>() and <span class="function">failmsg</span>() microservices can be used to generate
+errors. <span class="function">fail</span>(errorcode) generates an error with an error code.</p>
+
+</td>
+<td style="vertical-align: top; width: 25%" align="left">
+	
+<p>Example:</p>
+
+<p><code><span class="function">fail</span>(<span class="number">-1</span>)</code></p>
+
+<p><code><span class="function">failmsg</span>(&lt;errorcode&gt;, &lt;errormsg&gt;)</code> generates an error with an error code and
+an error message.</p>
+
+<p>Example:</p>
+
+<p><code><span class="function">failmsg</span>(<span class="number">-1</span>, <span class="string">&quot;this is an error message&quot;</span>)</code></p>
+
+<p>The msiExit microservice is similar to failmsg:</p>
+
+<p><code><span class="function">msiExit</span>(<span class="string">&quot;<span class="number">-1</span>&quot;</span>, <span class="string">&quot;msi&quot;</span>)</code></p>
+
+<h3>Inductive Data Types</h3>
+
+<p>The features discussed in this section are currently under development!</p>
+
+<p>An inductive data type is a data type for values that can be defined
+inductively, i.e. more complex values can be constructed from simpler values
+using constructors. General syntax:</p>
+
+<pre>
+data &lt;name&gt; <span class="operator">[</span> ( &lt;type param list&gt; ) <span class="operator">]</span> <span class="operator">=</span>
+  <span class="operator">&#124;</span> <span class="operator">:</span> &lt;data constructor type&gt;
+  ...
+  <span class="operator">&#124;</span> &lt;data constructor name&gt; <span class="operator">:</span>
+    &lt;data constructor type&gt;
+</pre>
+
+<p>For example, a data type that represents the natural numbers can be defined
+as</p>
+
+<pre>data nat <span class="operator">=</span>
+ <span class="operator">&#124;</span> <span class="constant">zero</span> <span class="operator">:</span> nat
+ <span class="operator">&#124;</span> succ <span class="operator">:</span> nat <span class="operator">-&gt;</span> nat
+</pre>
+
+</td>
+<td style="vertical-align: top; width: 25%" align="left">
+
+<p>Here the type name defined is <code>nat.</code> The type parameter list is
+empty. If the type parameter list is empty, we may omit it. There are two data
+constructors. The first constructor &quot;zero&quot; has type &quot;nat,&quot;
+which means that &quot;zero&quot; is a nullary constructor of nat. We use
+&quot;zero&quot; to represent &quot;0&quot;. The second constructor
+&quot;succ&quot; has type &quot;nat <span class="operator">-&gt;</span> nat&quot; which means that
+&quot;succ&quot; is unary constructor of nat. We use &quot;succ&quot; to
+represent the successor. With these two constructors we can represent all
+natural numbers: <code><span class="constant">zero</span>, <span class="function">succ</span>(<span class="constant">zero</span>), <span class="function">succ</span>(<span class="function">succ</span>(<span class="constant">zero</span>))</code>.</p>
+
+<h3>Pattern matching</h3>
+
+<p>If a data type has more than one data structure, then the &quot;match&quot;
+expression is useful:</p>
+
+<pre><span class="function">match</span> &lt;expr&gt; <span class="function">with</span>
+ <span class="operator">&#124;</span> &lt;pattern&gt; <span class="operator">=&gt;</span> &lt;expr&gt;
+ ...
+ <span class="operator">&#124;</span> &lt;pattern&gt; <span class="operator">=&gt;</span> &lt;expr&gt;
+</pre>
+
+<p>For example, given the nat data type we defined earlier, we can define the
+following function using the match expression:</p>
+
+<pre><span class="function">add</span>(*x, *y) <span class="operator">=</span>
+ <span class="function">match</span> *x <span class="function">with</span>
+ <span class="operator">&#124;</span> <span class="constant">zero</span> <span class="operator">=&gt;</span> *y
+ <span class="operator">&#124;</span> <span class="function">succ</span>(*z) <span class="operator">=&gt;</span> <span class="function">succ</span>(<span class="function">add</span>(*z, *y))
+</pre>
+
+<p>For another example, given the &quot;tree&quot; data type we defined earlier,
+we can define the following function</p>
+
+<pre><span class="function">size</span>(*t) <span class="operator">=</span>
+ <span class="function">match</span> *t <span class="function">with</span>
+ <span class="operator">&#124;</span> <span class="constant">empty</span> <span class="operator">=&gt;</span> <span class="number">0</span>
+ <span class="operator">&#124;</span> <span class="function">node</span>(*v, *l, *r) <span class="operator">=&gt;</span> <span class="number">1</span> <span class="operator">+</span>
+<span class="function">size</span>(*l) <span class="operator">+</span> <span class="function">size</span>(*r)
+</pre>
+</td>
+</tr>
+</tbody>
+</table>
+</body>
+</html>

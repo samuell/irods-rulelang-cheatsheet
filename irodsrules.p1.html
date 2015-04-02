@@ -1,0 +1,300 @@
+<html>
+<head>
+<style>
+body, p {
+	font-size: 9pt;
+	font-family: arial, helvetica, sans-serif;
+}
+.comment {
+	color: #999;
+}
+.string {
+	color: #c06;
+}
+.number {
+	color: #00f;
+}
+.function {
+	color: #369;
+  font-weight: bold;
+}
+.operator {
+	color: #900;
+}
+.constant {
+    color: #00f;
+}
+p {
+	margin: 0 0 1em 0;
+}
+code, pre {
+	font-size: 8pt;
+}
+h1, h2, h3 {
+	margin-bottom: .25em;
+}
+h4, h5, h6 {
+	margin-bottom: 0;
+}
+td {
+	vertical-align: top;
+}
+h3 {
+	font-size: 13pt;
+}
+table {
+	width: 100%
+}
+pre {
+  margin: 0;
+  padding: 0;
+}
+</style>
+</head>
+<body>
+<p>
+<b>iRODS Rule Language Cheat Sheet</b><br>
+iRODS Version 4.0.3<br>
+Author: Samuel Lampa, BILS</p>
+<table>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">
+	
+<h3>Numeric Literals</h3>
+
+<pre>
+<span class='number'>1</span> <span class='comment'># integer</span></code>
+<span class='number'>1.0</span> <span class='comment'># double</span></code>
+</pre>
+
+<h3>Strings</h3>
+
+<p>
+Concatenation:<br>
+<code><span class='string'>'A \'string\', '</span> ++ <span class='string'>&quot;another \&quot;string\&quot;</span></code>
+</p>
+
+<p>
+Some valid escape characters:<br>
+<code><span class='string'>\n, \r, \t, \\, \', \&quot;, \$, \*</span></code></p>
+
+<h3>Boolean constants</h3>
+
+<pre>
+<span class='constant'>true</span> <span class='comment'># True</span>
+<span class='constant'>false</span> <span class='comment'># False</span>
+</pre>
+
+<h3>Boolean comparison</h3>
+
+<pre>
+<span class='operator'>!</span> <span class='comment'># Not</span>
+<span class='operator'>&amp;&amp;</span> <span class='comment'># And</span>
+<span class='operator'>&#124;&#124;</span> <span class='comment'># Or</span>
+<span class='operator'>%%</span> <span class='comment'># Or used in the &quot;##&quot; syntax</span>
+</pre>
+
+<h3>Arithmetic operators</h3>
+
+<pre>
+<span class='operator'>-</span> <span class='comment'># Negation</span>
+<span class='operator'>^</span> <span class='comment'># Power</span>
+<span class='operator'>*</span> <span class='comment'># Multiplication</span>
+<span class='operator'>/</span> <span class='comment'># Division</span>
+<span class='operator'>%</span> <span class='comment'># Modulors</span>
+<span class='operator'>-</span> <span class='comment'># Subtraction</span>
+<span class='operator'>+</span> <span class='comment'># Addition</span>
+</pre>
+
+<h3>Arithmetic comparison</h3>
+
+<pre>
+<span class='operator'>&gt;</span> <span class='comment'># Greater than</span>
+<span class='operator'>&lt;</span> <span class='comment'># Less than</span>
+<span class='operator'>&gt;=</span> <span class='comment'># Greater than or equal</span>
+<span class='operator'>&lt;=</span> <span class='comment'># Less than or equal</span>
+</pre>
+
+</td>
+
+<td style="text-align: left;">
+	
+<h3>Arithmetic functions</h3>
+
+<pre>
+<span class='function'>exp</span>(&lt;num&gt;)
+<span class='function'>log</span>(&lt;num&gt;)
+<span class='function'>abs</span>(&lt;num&gt;)
+<span class='function'>floor</span>(&lt;num&gt;) <span class='comment'># always returns integer</span>
+<span class='function'>ceiling</span>(&lt;num&gt;) <span class='comment'># always returns integer</span>
+<span class='function'>average</span>(&lt;num&gt;, &lt;num&gt;, ...)
+<span class='function'>max</span>(&lt;num&gt;, &lt;num&gt;, ...)
+<span class='function'>min</span>(&lt;num&gt;, &lt;num&gt; , ...)
+</pre>
+
+<h3>String functions</h3>
+
+<p>
+<code><span class="function">writeLine</span>(<span class='string'>&quot;stdout&quot;</span>, <span class="string">&quot;Hi!&quot;</span>);</code><br>
+... prints out &quot;Hi!.&quot;
+</p>
+
+<p>
+<code><span class="string">&quot;This &quot;</span><span class="operator">++</span><span class="string">&quot;is&quot;</span><span class="operator">++</span><span class="string">&quot; a string.&quot;</span></code><br>
+... equals to <span class="string">&quot;This is a string.&quot;</span>
+</p>
+
+<p>
+<code>
+<span class="string">&quot;This is a string.&quot;</span> like <span class="string">&quot;This is*&quot;</span></code><br>
+... equals to <code>true</code>
+</p>
+
+<p>
+<code>
+<span class="string">&quot;This is.&quot;</span> like regex <span class="string">&quot;Th.*is[.]&quot;</span></code><br>
+... equals to <code>true</code>
+</p>
+
+<p>
+<code><span class="function">substr</span>(<span class="string">&quot;This is a string.&quot;</span>, 0, 4)</code><br>
+... Output: This
+</p>
+
+<p>
+<code><span class="function">strlen</span>(<span class="string">&quot;This is a string.&quot;</span>)</code><br>
+... Output: 17
+</p>
+
+<p>
+<code><span class="function">split</span>(<span class="string">&quot;This is a string.&quot;</span>, <span class="string">&quot; &quot;</span></span></span></span></span>)</code><br>
+... equals to: <code>[This,is,a,string.]</code>
+</p>
+
+<p>
+<code><span class="function">writeLine</span>(<span class="string">&quot;stdout&quot;</span>, <span class="function">triml</span>(<span class="string">&quot;This is<br /> a string.&quot;</span>, <span class="string">&quot; &quot;</span></span></span></span></span>));</code><br>
+... equals to: is a string.
+</p>
+
+<p>
+<code><span class="function">trimr</span>(<span class="string">&quot;This is a string.&quot;</span></span></span></span></span>, <span class="string">&quot; &quot;</span>)</code><br>
+... equals to: This is a
+</p>
+
+</td>
+<td style="text-align: left;">
+	
+<h3>List functions</h3>
+
+<p>
+<code><span class="function">list</span>(&lt;elem&gt;, &lt;elem&gt;, ...)</code><br>
+... creates a new list. Example:<br>
+<code><span class="function">list</span>(<span class="string">&quot;This&quot;</span>,<span class="string">&quot;is&quot;</span>,<span class="string">&quot;a&quot;</span>,<span class="string">&quot;list&quot;</span>)</code>
+</p>
+
+<p>
+<code><span class="function">elem</span>(&lt;list&gt;, &lt;index&gt;)</code><br>
+... retrieves elements from a list (0-indexed). Ex:<br>
+<code><span class="function">elem</span>(<span class="function">list</span>(<span class="string">&quot;This&quot;</span>,<span class="string">&quot;is&quot;</span>,<span class="string">&quot;a&quot;</span>,<span class="string">&quot;list&quot;</span>),0)</code><br>
+... returns &quot;This&quot;
+</p>
+
+
+<p>
+<code><span class="function">setelem</span>(&lt;list&gt;, &lt;index&gt;, &lt;value&gt;)</code><br>
+... updates an item in a list. Ex:<br>
+<code><span class="function">setelem</span>(<span class="function">list</span>(<span class="string">&quot;A&quot;</span>,<span class="string">&quot;list&quot;</span>),0,<span class="string">&quot;My&quot;</span>)</code><br>
+... evaluates to <code><span class="function">list</span>(<span class="string">&quot;My&quot;</span>,<span class="string">&quot;list&quot;</span>)</code>.
+</p>
+
+<p>
+<code><span class="function">size</span>(&lt;list&gt;)</code><br>
+... gives the size of a list. Ex:<br>
+<code><span class="function">size</span>(<span class="function">list</span>(<span class="string">&quot;This&quot;</span>,<span class="string">&quot;is&quot;</span>,<span class="string">&quot;a&quot;</span>,<span class="string">&quot;list&quot;</span>))</code><br>
+... evaluates to 4.
+</p>
+
+<p><code><span class="function">hd</span>(&lt;list&gt;)</code><br>
+... gives the head of a list, Ex:<br>
+<code><span class="function">hd</span>(<span class="function">list</span>(<span class="string">&quot;This&quot;</span>,<span class="string">&quot;is&quot;</span>,<span class="string">&quot;a&quot;</span>,<span class="string">&quot;list&quot;</span>))</code><br>
+... evaluates to &quot;This&quot;
+</p>
+
+<p>
+<code><span class="function">tl</span>(&lt;list&gt;)</code><br>
+... gives the tail of a list. Ex:<br>
+<code><span class="function">tl</span>(<span class="function">list</span>(<span class="string">&quot;This&quot;</span>,<span class="string">&quot;is&quot;</span>,<span class="string">&quot;a&quot;</span>,<span class="string">&quot;list&quot;</span>))</code><br>
+... evaluates to <span class="function">list</span>(<span class="string">&quot;is&quot;</span>,<span class="string">&quot;a&quot;</span>,<span class="string">&quot;list&quot;</span>)
+</p>
+
+
+<p>
+<code><span class="function">cons</span>(&lt;element&gt;, &lt;list&gt;)</code><br>
+... adds elements to a list. Ex:<br>
+<code><span class="function">cons</span>(<span class="string">&quot;My&quot;</span>,<span class="function">list</span>(<span class="string">&quot;list&quot;</span>))</code><br>
+... evaluates to <span class="function">list</span>(<span class="string">&quot;My&quot;</span>,<span class="string">&quot;list&quot;</span>).
+</p>
+
+<h3>Tuples</h3>
+
+<p>
+Tuples are created like so:<br>
+<code>( &lt;component&gt;, ..., &lt;component&gt; ) </code>
+</p>
+
+</td>
+<td style="text-align: left;">
+	
+<h3>If statements</h3>
+
+<p>
+Logical if:<br>
+<code>
+<span class="function">if</span> &lt;expr&gt; <span class="function">then</span> { &lt;actions&gt; }
+<span class="function">else</span> { &lt;actions&gt; }
+</code><br>
+Example:<br>
+<code><span class="function">if</span> (*A<span class="operator">==</span>1) <span class="function">then</span> { true; } <span class="function">else</span> { false; }</code>
+
+<p>Functional if (returning value of any type):<br>
+<code><span class="function">if</span> &lt;expr&gt; <span class="function">then</span> &lt;expr&gt; <span class="function">else</span> &lt;expr&gt;</code><br>
+Example:<br>
+<code><span class="function">if</span> <span class="constant">true</span> <span class="function">then</span> <span class="number">1</span> <span class="function">else</span> <span class="number">0</span></code><br>
+<code><span class="function">if</span> *A<span class="operator">==</span>1 <span class="function">then</span> true <span class="function">else</span> false</code>
+</p>
+
+<p>
+The following abbreviation are allowed (the red striked part can be abbreviated) in functional ifs:<br>
+<code><span class="function">if</span> (...) <span class="function">then</span> { ... } <span class="function">else</span> { ... }</code><br>
+<code><span class="function">if</span> (...) <span class="function">then</span> { ... } <span class="function">else</span> { <span class="function">if</span> (...)</code><br>
+<code><span class="function">then</span> {...} <span class="function">else</span> {...} }</code>
+</p>
+
+<p>
+Multiple abbreviations can be combined for example:<br>
+<code><span class="function">if</span> (*X<span class="operator">==</span>1) { *A <span class="operator">=</span> <span class="string">&quot;Mon&quot;</span>; }</code><br>
+<code><span class="function">else if</span> (*X<span class="operator">==</span>2) {*A <span class="operator">=</span> <span class="string">&quot;Tue&quot;</span>; }</code><br>
+<code><span class="function">else if</span> (*X<span class="operator">==</span>3) {*A <span class="operator">=</span> <span class="string">&quot;Wed&quot;</span>; }</code>
+</p>
+
+<h4>Foreach loops</h4>
+
+<h5>Without iterator:</h5>
+<pre>
+<span class="function">foreach</span>(*C) {
+    <span class="function">writeLine</span>(<span class="string">&quot;stdout&quot;</span>, *C);
+}
+</pre>
+
+<h5>With the iterator variable (*E in this case):</h5>
+<pre>
+<span class="function">foreach</span>(*E in *C) {
+    <span class="function">writeLine</span>(<span class="string">&quot;stdout&quot;</span>, *E);
+}
+</pre>
+</td>
+</tr>
+</tbody>
+</table>
+</body></html>
